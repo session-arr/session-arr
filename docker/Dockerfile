@@ -9,8 +9,11 @@ RUN apt-get install -y vim less
 # Install numactl
 RUN apt-get install -y numactl
 
+# Install python
+RUN apt-get install -y python
+
 # Welcome message
-RUN echo '[ ! -z "$TERM" -a -r /etc/welcome] && cat /etc/welcome' \
+RUN echo '[ ! -z "$TERM" -a -r /etc/welcome ] && cat /etc/welcome' \
     >> /etc/bash.bashrc \
     ; echo "\
 ===================================================================\n\
