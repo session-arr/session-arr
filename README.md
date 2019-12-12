@@ -154,15 +154,91 @@ functions.
 The script `./benchmark.sh` takes all the measurements that we used in our
 paper. Scripts `./plotall.sh <BENCHMARK> <CORES>` generates the speedup graphs
 that we used under `examples/plots`, for benchmark `<BENCHMARK>`, and execution
-times in `examples/<BENCHMARK>/data/t_CORES`. The benchmarks are:
-`examples/DotProd`, `examples/FFT`, `examples/Mergesort`, `examples/Quicksort`
-and `examples/ScalarMulMat`, and are described in the paper.
+times in `examples/<BENCHMARK>/data/t_CORES`. The script `./benchmark.sh` prints
+all the commands that are relevant to replicate the experiments manually.
 
-**Note**: our C back-end does not currently handle memory management. Therefore,
-we introduced it manually in the implementation of the primitive functions that
-we used.
+**Note**: the amount of cores used, the maximum input size (must be >=15), and
+the number of repetitions per experiment can be configures by setting the
+necessary environment variables:
+
+```
+CORES=4 REPETITIONS=50 MAXSIZE=30 ./benchmark.sh
+```
+
+The benchmarks are: `examples/DotProd`, `examples/FFT`, `examples/Mergesort`,
+`examples/Quicksort` and `examples/ScalarMulMat`, and are described in the
+paper.
 
 ### Manual Execution
+
+We show step-by-step how to evaluate one of the benchmarks, `DotProd`.  The
+first step is generating the C code from a Haskell module. We use the following
+command for such purpose:
+
+```
+$ stack exec -- session-arrc DotProd.hs
+Found functions:
+dotProd1
+dotProd2
+dotProd4
+dotProd8
+dotProd16
+dotProd24
+dotProd32
+dotProd64
+```
+
+Command `session-arrc` takes module `DotProd.hs`, finds all functions that
+can be compiled to C, and produces two files: `DotProd.c` and `DotProd.h`.
+In the same directory, we find `main.c`, that contains the implementation
+of the primitive functions used in `DotProd.hs`, as well as the main function
+instrumented to measure execution times. We compile the C code as follows:
+
+```
+gcc DotProd.c main.c -DREPETITIONS=2 -pthread -lm -o bench
+```
+
+We use `-DREPETITIONS=<num_reps>` to set the number of repetitions per
+experiment.
+
+Each benchmark contains `./run.sh` to execute the benchmarks an all the sizes.
+This outputs a file under `examples/DotProd/data/t_<CORES>` with the following
+contents:
+
+```
+...
+size: 1048576
+	K: seq
+		mean: 0.002663
+		stddev: 0.000178
+	K: 1
+		mean: 0.002902
+		stddev: 0.000292
+	K: 2
+		mean: 0.001655
+		stddev: 0.000110
+	K: 4
+		mean: 0.001352
+		stddev: 0.000332
+	K: 8
+		mean: 0.001641
+		stddev: 0.000397
+	K: 16
+		mean: 0.001745
+		stddev: 0.000257
+	K: 24
+		mean: 0.001938
+		stddev: 0.000185
+	K: 32
+		mean: 0.002307
+		stddev: 0.000636
+...
+```
+
+Parameter `K` depends on each of the benchmarks, and is related to the number of
+pthreads that are created.
+
+
 
 ### Generating Graphs
 
