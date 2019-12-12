@@ -1,0 +1,11 @@
+*.swp
+*.swo
+*.o
+.stack-work*
+SAlg.cabal
+
+examples/*/*
+!examples/*/*.hs
+!examples/*/*.sh
+!examples/*/main.c
+!examples/*/Makefile
