@@ -20,7 +20,7 @@ module Control.CArr
   , CArrFrac
   , CArrPar (..)
   , CArrLift (..)
-  , CAlg
+  , PAlg
   ) where
 
 import qualified Prelude
@@ -124,8 +124,8 @@ class ((forall a. CVal a => Num (t a Int)), CArr t) =>
   vdrop = vec (((fst + (snd >>> vsize)) &&& snd) >>> proj)
 
 class CArr t => CArrFix t where
-  fix :: (CVal a, CVal b) => (forall f. CAlg f => f a b -> f a b) -> t a b
-  kfix :: (CVal a, CVal b) => Int -> (forall f. CAlg f => f a b -> f a b) -> t a b
+  fix :: (CVal a, CVal b) => (forall f. PAlg f => f a b -> f a b) -> t a b
+  kfix :: (CVal a, CVal b) => Int -> (forall f. PAlg f => f a b -> f a b) -> t a b
 
 class CArrCmp t where
   (<)  :: (Num b, CVal a, CVal b) => t a b -> t a b -> t a Bool
@@ -143,4 +143,4 @@ class CArr t => CArrPar t where
   newProc :: CVal a => t a a
   runAt :: CVal a => PID -> t a a
 
-type CAlg t = (CArrIf t, CArrVec t, CArrCmp t, CArrFrac t, CArrPar t, CArrFix t)
+type PAlg t = (CArrIf t, CArrVec t, CArrCmp t, CArrFrac t, CArrPar t, CArrFix t)

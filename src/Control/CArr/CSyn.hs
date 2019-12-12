@@ -55,7 +55,7 @@ module Control.CArr.CSyn
   , X.CArrCmp(..)
   , Prelude.Num(..)
   , Prelude.Fractional(..)
-  , CAlg
+  , PAlg
   , CVal
   , X.CArrFix
   , Either
@@ -97,12 +97,12 @@ import qualified Prelude
 import Data.C
 import qualified Control.CCat as X
 import qualified Control.CArr as X
-import Control.CArr ( CAlg )
+import Control.CArr ( PAlg )
 
 import GHC.TypeLits
 
 class ctx :<: ctx' where
-  sub :: CAlg t => Expr t ctx' ctx
+  sub :: PAlg t => Expr t ctx' ctx
 
 --instance {-# OVERLAPPING #-}
 --  (CVal ctx) => ctx :<: ctx where
@@ -117,7 +117,7 @@ type family (:==:) a b where
   _ :==: _ = 'Prelude.False
 
 class (CVal ctx, CVal ctx', ctx :==: ctx' ~ flag) => Sub flag ctx ctx' where
-  subCtx :: CAlg t => t ctx' ctx
+  subCtx :: PAlg t => t ctx' ctx
 
 instance CVal ctx => Sub 'Prelude.True ctx ctx where
   subCtx = X.id
@@ -134,9 +134,9 @@ instance (CVal ctx, CVal ctx', Sub b ctx ctx') => ctx :<: ctx' where
 --  ctx :<: ctx'' where
 --  sub = sub X.>>> sub @ctx @ctx'
 
---newtype Var ctx a = Var { unVar :: forall t. CAlg t => t ctx a }
+--newtype Var ctx a = Var { unVar :: forall t. PAlg t => t ctx a }
 --
---var :: (CAlg t, CVal a, ctx :<: ctx') => Var ctx a -> t ctx' a
+--var :: (PAlg t, CVal a, ctx :<: ctx') => Var ctx a -> t ctx' a
 --var v = sub X.>>> unVar v
 
 type Var t ctx a = forall ctx'. (CVal ctx', ctx :<: ctx') => Expr t ctx' a
@@ -212,45 +212,45 @@ instance X.CArrFix f => X.CArrFix (Expr f) where
   fix f = Expr (X.fix f)
   kfix n f = Expr (X.kfix n f)
 
-fix :: (CAlg t, X.CArrFix t, CVal b, CVal a)
+fix :: (PAlg t, X.CArrFix t, CVal b, CVal a)
     => Int
-    -> (forall f. CAlg f => (forall ctx. Expr f ctx a -> Expr f ctx b) ->
+    -> (forall f. PAlg f => (forall ctx. Expr f ctx a -> Expr f ctx b) ->
         Var f a a -> Expr f a b)
     -> t a b
 fix k f = X.kfix k Prelude.$ \rf ->
   case f (app (Expr rf)) sub of
     Expr o -> o
 
-pfix :: forall t a b. (CAlg t, X.CArrFix t, CVal b, CVal a)
+pfix :: forall t a b. (PAlg t, X.CArrFix t, CVal b, CVal a)
     => Int
-    -> (forall f. (CAlg f, X.CArrFix f) => (forall ctx. Expr f ctx a -> Expr f ctx b) ->
+    -> (forall f. (PAlg f, X.CArrFix f) => (forall ctx. Expr f ctx a -> Expr f ctx b) ->
         Var f a a -> Expr f a b)
     -> t a b
 pfix k f = kfix k Prelude.$ \rf ->
   case f (app (Expr rf)) sub of
     Expr o -> o
   where
-    kfix :: (CVal a, CVal b) => Int -> (forall f. CAlg f => f a b -> f a b)
+    kfix :: (CVal a, CVal b) => Int -> (forall f. PAlg f => f a b -> f a b)
          -> t a b
     kfix kk ff
       | kk Prelude.<= 0 = X.newProc X.>>> X.fix ff
     kfix kk ff = ff (kfix (kk Prelude.- 1) ff)
 
-cfun :: CAlg t => (Var t a a -> Expr t a b) -> t a b
+cfun :: PAlg t => (Var t a a -> Expr t a b) -> t a b
 cfun f = case f sub of
            Expr e -> e
 
-app :: CAlg t
+app :: PAlg t
     => Expr t a b -> Expr t ctx a -> Expr t ctx b
 app (Expr f) (Expr x) =  Expr (f X.. x)
 
-prim :: (CAlg t, CVal b) => String -> Expr t ctx a -> Expr t ctx b
+prim :: (PAlg t, CVal b) => String -> Expr t ctx a -> Expr t ctx b
 prim s (Expr x) = Expr Prelude.$ X.arr s Prelude.undefined X.. x
 
-primLit :: (CAlg t, CVal a, CVal ctx) => a -> Expr t ctx a
+primLit :: (PAlg t, CVal a, CVal ctx) => a -> Expr t ctx a
 primLit s = Expr (X.lit s)
 
-vlet :: forall a t ctx b. CAlg t
+vlet :: forall a t ctx b. PAlg t
      => Expr t ctx a -> (CVal a => Var t (a, ctx) a -> Expr t (a, ctx) b) -> Expr t ctx b
 vlet (Expr x) f =
   case f fstCtx of
@@ -260,33 +260,33 @@ vlet (Expr x) f =
     fstCtx = case (sub :: Expr t ctx' (a, ctx)) of
                Expr ff -> Expr (ff X.>>> (X.fst :: t (a, ctx) a))
 
-(.$) :: CAlg t
+(.$) :: PAlg t
      => (Var t (a, ctx) a -> Expr t (a, ctx) b) -> Expr t ctx a -> Expr t ctx b
 f .$ x = vlet x f
 
-pair :: CAlg t
+pair :: PAlg t
      => (Expr t ctx a, Expr t ctx b) -> Expr t ctx (a, b)
 pair (Expr l, Expr r) = Expr (l X.&&& r)
 
-fst :: (CAlg t, CVal a, CVal b)
+fst :: (PAlg t, CVal a, CVal b)
      => Expr t ctx (a, b) -> Expr t ctx a
 fst (Expr f) = Expr (f X.>>> X.fst)
 
-snd :: (CAlg t, CVal a, CVal b)
+snd :: (PAlg t, CVal a, CVal b)
      => Expr t ctx (a, b) -> Expr t ctx b
 snd (Expr f) = Expr (f X.>>> X.snd)
 
-docase :: (CAlg t, CVal a, CVal b)
+docase :: (PAlg t, CVal a, CVal b)
        => Expr t ctx (Either a b) -> Expr t ctx (Either (a, ctx) (b, ctx))
 docase (Expr f) = Expr (f X.&&& X.id X.>>> X.distrL)
 
-(>>>) :: CAlg t => Expr t a b -> Expr t b c -> Expr t a c
+(>>>) :: PAlg t => Expr t a b -> Expr t b c -> Expr t a c
 Expr l >>> Expr r = Expr (l X.>>> r)
 
-(|||) :: CAlg t => Expr t a c -> Expr t b c -> Expr t (Either a b) c
+(|||) :: PAlg t => Expr t a c -> Expr t b c -> Expr t (Either a b) c
 Expr l ||| Expr r = Expr (l X.||| r)
 
-acase :: forall t ctx a b c. (CAlg t, CVal a, CVal b)
+acase :: forall t ctx a b c. (PAlg t, CVal a, CVal b)
       => Expr t ctx (Either a b)
       -> (Var t (a, ctx) a -> Expr t (a, ctx) c)
       -> (Var t (b, ctx) b -> Expr t (b, ctx) c)
@@ -314,30 +314,30 @@ cse .| f = cse f
      -> Expr t ctx c
 cse .|| f = cse f
 
-inl :: (CAlg t, CVal b) => Expr t ctx a -> Expr t ctx (Either a b)
+inl :: (PAlg t, CVal b) => Expr t ctx a -> Expr t ctx (Either a b)
 inl x@Expr{} = x >>> Expr X.inl
 
-inr :: (CAlg t, CVal a) => Expr t ctx b -> Expr t ctx (Either a b)
+inr :: (PAlg t, CVal a) => Expr t ctx b -> Expr t ctx (Either a b)
 inr x@Expr{} = x >>> Expr X.inr
 
 
-vget :: (CAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx a
+vget :: (PAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx a
 vget (Expr i) (Expr v) = Expr (i X.&&& v X.>>> X.proj)
 
-vtake :: (CAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx [a]
+vtake :: (PAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx [a]
 vtake (Expr i) (Expr v) = Expr (i X.&&& v X.>>> X.vtake)
 
-vdrop :: (CAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx [a]
+vdrop :: (PAlg t, CVal a) => Expr t ctx Int -> Expr t ctx [a] -> Expr t ctx [a]
 vdrop (Expr i) (Expr v) = Expr (i X.&&& v X.>>> X.vdrop)
 
-vsize :: (CAlg t, CVal a) => Expr t ctx [a] -> Expr t ctx Int
+vsize :: (PAlg t, CVal a) => Expr t ctx [a] -> Expr t ctx Int
 vsize (Expr v) = Expr (v X.>>> X.vsize)
 
-par :: CAlg t
+par :: PAlg t
     => (Var t ctx a -> Expr t ctx b) -> Expr t ctx a -> Expr t ctx b
 par f x@Expr{} = f (sub >>> x >>> Expr X.newProc)
 
-(@@) :: CAlg t => (Var t ctx a -> Expr t ctx b) -> Prelude.Integer
+(@@) :: PAlg t => (Var t ctx a -> Expr t ctx b) -> Prelude.Integer
      -> Expr t ctx a -> Expr t ctx b
 f @@ p = \x@Expr{} -> f (sub >>> x >>> Expr (X.runAt p))
 
@@ -391,7 +391,7 @@ cdictProd SZ = CDict
 cdictProd (SS m) = case cdictProd @a m of
                     CDict -> CDict
 
-fmapP' :: forall t a b ctx n v. (CAlg t, CVal a)
+fmapP' :: forall t a b ctx n v. (PAlg t, CVal a)
        => SINat n -> v a -> v b -> Bool
        -> (Expr t ctx a -> Expr t ctx b)
        -> Expr t ctx (Prod n a) -> Expr t ctx (Prod n b)
@@ -411,14 +411,14 @@ fmapP' (SS m) tya tyb b f x =
 --fmapPIx (SS m) f k = f k *** fmapPIx m f (k+1)
 
 pmap :: forall a b n t ctx.
-        (CAlg t, CVal a)
+        (PAlg t, CVal a)
      => SINat n
      -> (Expr t ctx a -> Expr t ctx b)
      -> Expr t ctx (Prod n a) -> Expr t ctx (Prod n b)
 pmap n = fmapP' n Proxy Proxy Prelude.True
 
 smap :: forall a b n t ctx.
-        (CAlg t, CVal a)
+        (PAlg t, CVal a)
      => SINat n
      -> (Expr t ctx a -> Expr t ctx b)
      -> Expr t ctx (Prod n a) -> Expr t ctx (Prod n b)
@@ -427,7 +427,7 @@ smap sn = fmapP' sn Proxy Proxy Prelude.False
 type CValProd n a = (IsSing n, CVal (Prod n a))
 type CValTProd n a = (IsSing (FromNat n), CVal (Prod (FromNat n) a))
 
---assocL :: (CAlg t, CVal a, CVal b, CVal c) => t (a, (b, c)) ((a, b), c)
+--assocL :: (PAlg t, CVal a, CVal b, CVal c) => t (a, (b, c)) ((a, b), c)
 --assocL = cfun Prelude.$ \x -> pair (pair (fst x, fst (snd x)), snd (snd x))
 
 type family Div2 (n :: INat) where
@@ -442,10 +442,10 @@ div2 (SS (SS n)) = SS (div2 n)
 
 data Proxy a = Proxy
 
-(&&&) :: CAlg t => Expr t a b -> Expr t a c -> Expr t a (b,c)
+(&&&) :: PAlg t => Expr t a b -> Expr t a c -> Expr t a (b,c)
 Expr f &&& Expr g = Expr (f X.&&& g)
 
-red :: forall t a n. CAlg t
+red :: forall t a n. PAlg t
     => SINat n -> Expr t (a, a) a
     -> Expr t (Prod n a) (Prod (Div2 n) a)
 red SZ Expr{} = Expr X.id
@@ -460,7 +460,7 @@ red (SS (SS n)) f@Expr{} =
     fsnd :: (CVal a, CVal b) => Expr t (a, b) b
     fsnd = Expr X.snd
 
-pfold' :: forall t n a. CAlg t
+pfold' :: forall t n a. PAlg t
        => SINat n -> Expr t (a, a) a
        -> Expr t (Prod n a) a
 pfold' SZ Expr{} = Expr X.id
@@ -471,12 +471,12 @@ pfold' n f@Expr{} =
   where
     !dn2 = div2 n
 
-pfold :: forall t n a ctx. CAlg t
+pfold :: forall t n a ctx. PAlg t
        => SINat n -> Expr t (a, a) a
        -> Expr t ctx (Prod n a) -> Expr t ctx a
 pfold n f x = x >>> pfold' n f
 
-sfold :: forall t n a ctx. (CAlg t, CVal a)
+sfold :: forall t n a ctx. (PAlg t, CVal a)
       => SINat n -> (Expr t ctx (a, a) -> Expr t ctx a)
       -> Expr t ctx (Prod n a) -> Expr t ctx a
 sfold SZ _  x = x
@@ -484,11 +484,11 @@ sfold (SS n) f x =
   case cdictProd @a n of
     CDict -> f (pair (fst x, sfold n f (snd x)))
 
---sfold :: forall n t a ctx. (CAlg t, CVal a, CVal ctx, IsSing (FromNat n))
+--sfold :: forall n t a ctx. (PAlg t, CVal a, CVal ctx, IsSing (FromNat n))
 --      => (t ctx (a, a) -> t ctx a) -> t ctx (Prod (FromNat n) a) -> t ctx a
 --sfold = sfold' (sing :: SINat (FromNat n))
 
-split' :: forall t a ctx n. (CAlg t, CVal ctx, CVal a)
+split' :: forall t a ctx n. (PAlg t, CVal ctx, CVal a)
        => Bool -> Prelude.Integer -> SINat n
        -> (Expr t ctx Int -> Expr t ctx a)
        -> Expr t ctx (Prod n a)
@@ -500,19 +500,19 @@ split' b i (SS n) g =
                else g (Expr (Prelude.fromInteger i))
       in pair (gi, split' b (i Prelude.+ 1) n g)
 
-psplit :: forall n t a ctx. (CAlg t, CVal ctx)
+psplit :: forall n t a ctx. (PAlg t, CVal ctx)
       => SINat n -> (Expr t ctx Int -> Expr t ctx a) -> Expr t ctx (Prod n a)
 psplit n f =
   case f (Expr (Prelude.fromInteger 0)) of
     Expr{} -> split' Prelude.True 0 n f
 
-ssplit :: forall a n t ctx. (CAlg t, CVal ctx)
+ssplit :: forall a n t ctx. (PAlg t, CVal ctx)
       => SINat n -> (Expr t ctx Int -> Expr t ctx a) -> Expr t ctx (Prod n a)
 ssplit n f =
   case f (Expr (Prelude.fromInteger 0)) of
     Expr{} -> split' Prelude.False 0 n f
 
-splitv' :: forall t a n. (CAlg t, CVal a)
+splitv' :: forall t a n. (PAlg t, CVal a)
         => Bool -> SINat n -> t (Int, [a]) (Prod n [a])
 splitv' b SZ =
   if b then X.snd X.>>> X.newProc
@@ -523,7 +523,7 @@ splitv' b (SS n) =
       (if b then X.vtake X.>>> X.newProc else X.vtake)
       X.&&& ((X.fst X.&&& X.vdrop) X.>>> splitv' b n)
 
-psplitv :: forall a t n. (CAlg t, CVal a)
+psplitv :: forall a t n. (PAlg t, CVal a)
         => SINat n -> t [a] (Prod n [a])
 psplitv n =
   case cdictProd @[a] n of
@@ -532,7 +532,7 @@ psplitv n =
   where
     isn = 1 Prelude.+ toInteger n
 
-ssplitv :: forall a t n. (CAlg t, CVal a)
+ssplitv :: forall a t n. (PAlg t, CVal a)
         => SINat n -> t [a] (Prod n [a])
 ssplitv n =
   case cdictProd @[a] n of
@@ -541,12 +541,12 @@ ssplitv n =
   where
     isn = 1 Prelude.+ toInteger n
 
-splitv :: forall n a f ctx. (CAlg f, CVal a, IsSing n)
+splitv :: forall n a f ctx. (PAlg f, CVal a, IsSing n)
        => SINat n -> Expr f ctx [a] -> Expr f ctx (Prod n [a])
 splitv n x@Expr{} =
   withCDict (cdictProd @[a] n) Prelude.$ app (ssplitv n) x
 
-pzip' :: forall a b n f. (CAlg f, CVal a, CVal b)
+pzip' :: forall a b n f. (PAlg f, CVal a, CVal b)
        => SINat n -> f (Prod n a, Prod n b) (Prod n (a, b))
 pzip' SZ = X.id
 pzip' (SS n) =
@@ -555,7 +555,7 @@ pzip' (SS n) =
       ((X.fst X.>>> X.fst) X.&&& (X.snd X.>>> X.fst)) X.&&&
       ((X.fst X.>>> X.snd) X.&&& (X.snd X.>>> X.snd) X.>>> pzip' @a @b n)
 
-pzip :: forall a b n f ctx. (CAlg f, CVal a, CVal b)
+pzip :: forall a b n f ctx. (PAlg f, CVal a, CVal b)
      => SINat n
      -> Expr f ctx (Prod n a) -> Expr f ctx (Prod n b)
      -> Expr f ctx (Prod n (a, b))
@@ -580,7 +580,7 @@ cdictTree SZ = CDict
 cdictTree (SS n) = case cdictTree @a n of
                      CDict -> CDict
 
-zipTree' :: CAlg f => SINat n -> f ([Double], [Double]) [Double]
+zipTree' :: PAlg f => SINat n -> f ([Double], [Double]) [Double]
          -> f (Tree n [Double], Tree n [Double]) (Tree n [Double])
 zipTree' SZ f = f
 zipTree' (SS x) f =
@@ -590,7 +590,7 @@ zipTree' (SS x) f =
                  ((X.fst X.>>> X.snd) X.&&& (X.snd X.>>> X.snd))
       in swap X.>>> (zipTree' x f X.*** zipTree' x f)
 
-zipTree :: (CAlg f, CVal ctx)
+zipTree :: (PAlg f, CVal ctx)
         => SINat n -> f ([Double], [Double]) [Double]
         -> Expr f ctx (Tree n [Double], Tree n [Double])
         -> Expr f ctx (Tree n [Double])

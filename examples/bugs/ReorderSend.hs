@@ -14,5 +14,5 @@ module ReorderSend where
 import Control.CArr.CSyn
 import Language.SPar.Skel ( printASkel, mempty )
 
-buggy :: forall f. CAlg f => f Int Int
+buggy :: forall f. PAlg f => f Int Int
 buggy = cfun $ \x -> (3 + x) + (1 + 2)

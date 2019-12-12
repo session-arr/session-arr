@@ -8,5 +8,5 @@ import Language.SPar.Skel
 testIf :: (Bool, Int) :-> Int
 testIf = mif >>> 1 ||| 2
 
-test :: (CAlg f, CArrPar f (:->)) => f (Bool, Int) Int
+test :: (PAlg f, CArrPar f (:->)) => f (Bool, Int) Int
 test = testIf `runAt` 0

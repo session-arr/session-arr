@@ -14,10 +14,10 @@ module DotProd where
 import Control.CArr.CSyn
 import Language.SPar.Skel ( printASkel )
 
---timesBench :: CAlg f => f (TProd 32 [Int]) (TProd 32 [Int])
+--timesBench :: PAlg f => f (TProd 32 [Int]) (TProd 32 [Int])
 --timesBench = cfun $ pmap (psize @32) (prim "sum")
 
-splitIn :: forall f n a. (CAlg f, CVal a)
+splitIn :: forall f n a. (PAlg f, CVal a)
         => SINat n
         -> f (Int, ([a],[a])) (Prod n ([a],[a]))
 splitIn sz = cfun $ \x ->
@@ -32,7 +32,7 @@ splitIn sz = cfun $ \x ->
       vlet (pair (vdrop s l, vdrop s r)) $ \d ->
       pair (t, app (splitIn n) (pair (s, d)))
 
-dotProdN :: forall f n. CAlg f => SINat n -> f ([Double],[Double]) Double
+dotProdN :: forall f n. PAlg f => SINat n -> f ([Double],[Double]) Double
 dotProdN i = cfun $ \x ->
   vlet (vsize (fst x) - 1) $ \sz ->
   vlet (1 + sz / (1 + fromINat i)) $ \sz' ->
@@ -46,26 +46,26 @@ dotProdN i = cfun $ \x ->
     dot = prim "dot"
 
 
-dotProd1 :: CAlg f => f ([Double],[Double]) Double
+dotProd1 :: PAlg f => f ([Double],[Double]) Double
 dotProd1 = withSize 1 $ dotProdN
 
-dotProd2 :: CAlg f => f ([Double],[Double]) Double
+dotProd2 :: PAlg f => f ([Double],[Double]) Double
 dotProd2 = withSize 2 $ dotProdN
 
-dotProd4 :: CAlg f => f ([Double],[Double]) Double
+dotProd4 :: PAlg f => f ([Double],[Double]) Double
 dotProd4 = withSize 4 $ dotProdN
 
-dotProd8 :: CAlg f => f ([Double],[Double]) Double
+dotProd8 :: PAlg f => f ([Double],[Double]) Double
 dotProd8 = withSize 8 $ dotProdN
 
-dotProd16 :: CAlg f => f ([Double],[Double]) Double
+dotProd16 :: PAlg f => f ([Double],[Double]) Double
 dotProd16 = withSize 16 $ dotProdN
 
-dotProd24 :: CAlg f => f ([Double],[Double]) Double
+dotProd24 :: PAlg f => f ([Double],[Double]) Double
 dotProd24 = withSize 24 $ dotProdN
 
-dotProd32 :: CAlg f => f ([Double],[Double]) Double
+dotProd32 :: PAlg f => f ([Double],[Double]) Double
 dotProd32 = withSize 32 $ dotProdN
 
-dotProd64 :: CAlg f => f ([Double],[Double]) Double
+dotProd64 :: PAlg f => f ([Double],[Double]) Double
 dotProd64 = withSize 64 $ dotProdN

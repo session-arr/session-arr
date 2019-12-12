@@ -47,6 +47,16 @@ USER cc20-artifact
 WORKDIR /home/cc20-artifact
 ENV PATH $HOME/.local/bin:$PATH
 
+# Vim Pathogen
+RUN mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+# haskell-vim
+RUN cd ~/.vim/bundle
+RUN git clone https://github.com/neovimhaskell/haskell-vim.git
+RUN echo 'syntax on' >> ~/.vimrc
+RUN echo 'filetype plugin indent on' >> ~/.vimrc
+
 # Clone artifact
 RUN git clone https://github.com/session-arr/session-arr.git session-arr
 WORKDIR /home/cc20-artifact/session-arr
