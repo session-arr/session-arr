@@ -132,15 +132,35 @@ l1. r0 -> r2 : (l1).
 5. Implement the missing C functions. In this example this is function `merge`,
    specified in the Haskell code as `prim "merge"`.
 
-## Exploring Generated Code and Protocol
+```c
+vec_double_t merge(pair_int_pair_vec_double_vec_double_t in){
+  ...
+}
+```
 
-### Haskell Code
+### Notes on Code Generation and Recursion
 
-### Generated C code
-
-### Inferred Protocol
+We are currently working on stabilising our prototype implementation, and
+implementing a number of practical improvements, including: structural recursion
+for global types and parallel code (to solve the LOC explosion that results of
+recursion unrolling), and encoding more program transformations. Since the
+only rewriting that we support at the moment is recursion unrolling, we
+provide construct `fix`, parameterised with an upper bound of allowed
+unrollings, that we use for a more user-friendly specification of recursive
+functions.
 
 ## Benchmarks
+
+The script `./benchmark.sh` takes all the measurements that we used in our
+paper. Scripts `./plotall.sh <BENCHMARK> <CORES>` generates the speedup graphs
+that we used under `examples/plots`, for benchmark `<BENCHMARK>`, and execution
+times in `examples/<BENCHMARK>/data/t_CORES`. The benchmarks are:
+`examples/DotProd`, `examples/FFT`, `examples/Mergesort`, `examples/Quicksort`
+and `examples/ScalarMulMat`, and are described in the paper.
+
+**Note**: our C back-end does not currently handle memory management. Therefore,
+we introduced it manually in the implementation of the primitive functions that
+we used.
 
 ### Manual Execution
 

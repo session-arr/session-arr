@@ -46,4 +46,3 @@ done
 
 popd > /dev/null
 echo "+ popd"
-popd > /dev/null

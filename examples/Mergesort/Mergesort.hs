@@ -10,7 +10,7 @@ msort n = fix n $ \ms x ->
   then x
   else vlet (sz / 2) $ \sz2 ->
     vlet (par ms $ vtake sz2 x) $ \xl ->
-    vlet (ms $ vdrop sz2 x) $ \xr ->
+    vlet (par ms $ vdrop sz2 x) $ \xr ->
     app (merge ()) $ pair (sz, pair (xl, xr))
 
 -- prevent it from being compiled
@@ -22,9 +22,6 @@ parMsort0 = msort 0
 
 parMsort1 :: PAlg f => f [Double] [Double]
 parMsort1 = msort 1
-
--- parMsort1a :: PAlg f => f [Double] [Double]
--- parMsort1a = msort_2
 
 parMsort2 :: PAlg f => f [Double] [Double]
 parMsort2 = msort 2
