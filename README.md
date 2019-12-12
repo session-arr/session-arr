@@ -13,12 +13,11 @@ performance of the generated code, and its scalability.
 
 ## Contents
 
-* README.md ...................... This file
-* LICENSE ........................ BSD-3 license, anonymised for this submission
-* src ............................ Source code of the EDSL + Compiler
-* app ............................ Source code of the binary `session-arrc`
-* examples ....................... Examples and benchmarks
-* tutorial ....................... Small tutorial that illustrates the main
-                                   features of `session-arrows`.
-* benchmark_data ................. Old benchmark data and figures.
-* benchmark.sh ................... Script to rerun all benchmarks.
+* **README.md**: This file
+* **LICENSE**: BSD-3 license, anonymised for this submission
+* **src**: Source code of the EDSL + Compiler
+* **app**: Source code of the binary `session-arrc`
+* **examples**: Examples and benchmarks
+* **tutorial**: Small tutorial that illustrates the main features of `session-arrows`.
+* **benchmark_data**: Old benchmark data and figures.
+* **benchmark.sh**: Script to rerun all benchmarks.
