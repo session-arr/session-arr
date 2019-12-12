@@ -11,7 +11,7 @@ functions defined in terms of our EDSL constructs, and compiles them to C code.
 The artifact also contains a number of benchmarks, used to measure the run-time
 performance of the generated code, and its scalability.
 
-## Contents
+## Repository Contents
 
 * **README.md**: This file
 * **LICENSE**: BSD-3 license, anonymised for this submission
@@ -21,3 +21,35 @@ performance of the generated code, and its scalability.
 * **tutorial**: Small tutorial that illustrates the main features of `session-arrows`.
 * **benchmark_data**: Old benchmark data and figures.
 * **benchmark.sh**: Script to rerun all benchmarks.
+
+## Overview
+
+### Introduction
+
+### Implementation
+
+### Programming Methodology
+
+## Exploring Generated Code and Protocol
+
+### Haskell Code
+
+### Generated C code
+
+### Inferred Protocol
+
+## Benchmarks
+
+### Manual Execution
+
+### Generating Graphs
+
+## Tutorial
+
+### General Information
+
+### Haskell Code
+
+### Implementing Missing C Functions
+
+### Execution
