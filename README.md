@@ -238,13 +238,23 @@ size: 1048576
 Parameter `K` depends on each of the benchmarks, and is related to the number of
 pthreads that are created.
 
-
-
 ### Generating Graphs
 
-## Tutorial
+Script `./plotall.sh` is a wrapper that calls `python plot.py` to produce the
+graphs. For example, from directory `examples`:
 
-### General Information
+```
+$ ./plotall.sh DotProd 4
+```
+
+This generates under `examples/plots/dotprod_4_k.pdf` and
+`examples/plots/dotprod_4_s.pdf` the speedups with varying `K`, or varying input
+size respectively.
+
+**Note**: to visualise the plots, we recommend using `docker cp`, e.g. `docker
+cp <NAME>:/home/cc20-artifact/session-arr/examples/plots/<FILE> .`
+
+## Tutorial
 
 ### Haskell Code
 

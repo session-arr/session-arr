@@ -11,6 +11,7 @@ RUN apt-get install -y numactl
 
 # Install python
 RUN apt-get install -y python
+RUN apt-get install -y python3-matplotlib
 
 # Welcome message
 RUN echo '[ ! -z "$TERM" -a -r /etc/welcome ] && cat /etc/welcome' \
