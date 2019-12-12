@@ -1,6 +1,19 @@
 #Download base image haskell 8.6
 FROM haskell:8.6
 
+# Add cc20-artifact user
+RUN useradd -ms /bin/bash cc20-artifact
+USER cc20-artifact
+WORKDIR /home/cc20-artifact
+ENV PATH $HOME/.local/bin:$PATH
+
+# Clone artifact
+RUN git clone https://github.com/session-arr/session-arr.git session-arr
+WORKDIR /home/cc20-artifact/session-arr
+RUN stack build
+
+USER root
+
 RUN apt-get update
 
 # Install text editor
@@ -11,7 +24,8 @@ RUN apt-get install -y numactl
 
 # Install python
 RUN apt-get install -y python
-RUN apt-get install -y python3-matplotlib
+RUN apt-get install -y python-matplotlib
+RUN apt-get install -y python-pint
 
 # Welcome message
 RUN echo '[ ! -z "$TERM" -a -r /etc/welcome ] && cat /etc/welcome' \
@@ -42,11 +56,7 @@ read README.md for a more detailed description. \n\
 \n"\
     > /etc/welcome
 
-# Add cc20-artifact user
-RUN useradd -ms /bin/bash cc20-artifact
 USER cc20-artifact
-WORKDIR /home/cc20-artifact
-ENV PATH $HOME/.local/bin:$PATH
 
 # Vim Pathogen
 RUN mkdir -p ~/.vim/autoload ~/.vim/bundle && \
@@ -58,9 +68,6 @@ RUN git clone https://github.com/neovimhaskell/haskell-vim.git
 RUN echo 'syntax on' >> ~/.vimrc
 RUN echo 'filetype plugin indent on' >> ~/.vimrc
 
-# Clone artifact
-RUN git clone https://github.com/session-arr/session-arr.git session-arr
 WORKDIR /home/cc20-artifact/session-arr
-RUN stack build
 
 ENTRYPOINT ["/bin/bash"]

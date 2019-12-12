@@ -252,7 +252,8 @@ This generates under `examples/plots/dotprod_4_k.pdf` and
 size respectively.
 
 **Note**: to visualise the plots, we recommend using `docker cp`, e.g. `docker
-cp <NAME>:/home/cc20-artifact/session-arr/examples/plots/<FILE> .`
+cp <NAME>:/home/cc20-artifact/session-arr/examples/plots .`, where `<NAME>` is
+the container name obtained via `docker ps -a`.
 
 ## Tutorial
 

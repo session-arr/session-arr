@@ -18,8 +18,6 @@ text_style = dict(fontsize='xx-large', fontdict={'family': 'monospace'})
 from pint import UnitRegistry
 ureg = UnitRegistry()
 
-from quantulum import parser
-
 def plotter(ax, data1, list_data2, param_dict):
     """
     Helper function from matplotlib.org/tutorials/introductory/usage.html
