@@ -1,7 +1,7 @@
 # session-arrows
 
 This is the artifact for the paper *Compiling First-Order Functions to
-Session-Typed Parallel Code*. The tool is a Haskell EDSL, session-arrows, that
+Session-Typed Parallel Code*. The tool is a Haskell EDSL, **session-arrows**, that
 encodes the language _PAlg_ described in the paper in terms of a
 reimplementation of Haskell `Control.Arrow`. Session-arrows is meant for writing
 first-order functions with participant (process) annotations. These functions
@@ -18,16 +18,20 @@ performance of the generated code, and its scalability.
 * **src**: Source code of the EDSL + Compiler
 * **app**: Source code of the binary `session-arrc`
 * **examples**: Examples and benchmarks
-* **tutorial**: Small tutorial that illustrates the main features of `session-arrows`.
+* **tutorial**: Small tutorial that illustrates the main features of **session-arrows**.
 * **benchmark_data**: Old benchmark data and figures.
 * **benchmark.sh**: Script to rerun all benchmarks.
 
 ## Overview
 
-`session-arrows` is the implementation of the _PAlg_ and _Alg_ languages
+**session-arrows** is the implementation of the _PAlg_ and _Alg_ languages
 described in *Compiling First-Order Functions to Session-Typed Parallel Code*.
 The implementation is a Haskell EDSL in terms of a reimplementation of Haskell
-Arrows. The source code is under *src*, and the main modules are:
+Arrows.
+
+### Implementation
+
+The source code is under *src*, and the main modules are:
 
 - `Control.Monad.CGen`: the C code generation monad.
 
@@ -50,11 +54,83 @@ Arrows. The source code is under *src*, and the main modules are:
 
 - `Language.SessionTypes.Global`: deep embedding of global types in Haskell.
 
-### Introduction
-
-### Implementation
 
 ### Programming Methodology
+
+1. The programmer starts a Haskell module:
+
+```haskell
+{-# LANGUAGE RebindableSyntax #-}
+module Mergesort where
+
+import Control.CArr.CSyn
+
+msort :: (CVal a, PAlg f) => f [a] [a]
+...
+```
+
+Both `Control.CArr` and `Control.CArr.CSyn` make use of Haskell's
+`RebindableSyntax` extensions, which allow us to provide our own interpretation
+to common Haskell syntactic constructs, such as `if-then-else`.
+
+2. Implement a first-order function using the constructs in either
+   `Control.CArr` or `Control.CArr.CSyn`.
+
+```haskell
+msort = fix 2 $ \ms x ->
+  vlet (vsize x) $ \sz ->
+  if sz <= 1
+  then x
+  else vlet (sz / 2) $ \sz2 ->
+    vlet (ms $ vtake sz2 x) $ \xl ->
+    vlet (ms $ vdrop sz2 x) $ \xr ->
+    prim "merge" $ pair (sz, pair (xl, xr))
+```
+
+3. Instrument the code to produce a parallel version. This instrumentation
+   should guide the annotation strategy described in the paper:
+```haskell
+...
+    vlet (par ms $ vtake sz2 x) $ \xl ->
+    vlet (ms $ vdrop sz2 x) $ \xr ->
+    prim "merge" $ pair (sz, pair (xl, xr))
+```
+
+4. Generate the (protocol) global type, and inspect the outcome of the achieved
+   parallelisation. Repeat step *3* if the outcome is undesired.
+```
+msort ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     r0 -> r3 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r3 : (l1).
+    r0 -> r1 : (ECVec ECDbl).
+    r1 -> r2
+    {l0. r0 -> r3
+         {l0. r1 -> r0 : (l0).
+              r1 -> r0 : (ECVec ECDbl).
+              end;
+         l1. r0 -> r3 : (ECVec ECDbl).
+             r3 -> r0 : (ECVec ECDbl).
+             r1 -> r0 : (l1).
+             r1 -> r0 : (ECVec ECDbl).
+             end};
+    l1. r1 -> r2 : (ECVec ECDbl).
+        r2 -> r1 : (ECVec ECDbl).
+        r0 -> r3
+        {l0. r1 -> r0 : (l0).
+             r1 -> r0 : (ECVec ECDbl).
+             end;
+        l1. r0 -> r3 : (ECVec ECDbl).
+            r3 -> r0 : (ECVec ECDbl).
+            r1 -> r0 : (l1).
+            r1 -> r0 : (ECVec ECDbl).
+            end}}}
+```
+
+5. Implement the missing C functions. In this example this is function `merge`,
+   specified in the Haskell code as `prim "merge"`.
 
 ## Exploring Generated Code and Protocol
 

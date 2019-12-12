@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE MonoLocalBinds #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -10,13 +9,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module ScalarMulMat where
 
---import qualified Prelude as P
 import Control.CArr.CSyn
---import Control.Monad.CGen
---import System.Environment
-
---timesBench :: PAlg f => f (TProd 32 [Double]) (TProd 32 [Double])
---timesBench = cfun $ pmap (psize @32) (prim "sum")
 
 scalarProd :: forall n f. (PAlg f, CValProd n [[Double]])
            => SINat n
@@ -52,24 +45,3 @@ parProd8 = withSize 8 parProd
 parProd16 = withSize 16 parProd
 parProd32 = withSize 32 parProd
 parProd64 = withSize 64 parProd
-
-
---  cfun $ \i ->
---  vlet (app prd i) $ \j ->
---  pfold @5 (par $ app cat) j
---  where
---    prd = cfun $ \x ->
---      vlet (vsize x / 32) $
---      \sz' -> let takeFun y = vtake sz' $ vdrop (y * sz') x in
---        vlet (ssplit @5 takeFun) $
---        \z -> smap @5 (prim "prod") z
---    cat = cfun $ prim "cat"
---
---scalarSeq :: [Double] :-> [Double]
---scalarSeq = scalarProd
---
---scalarPar :: [Double] :=> [Double]
---scalarPar = lift scalarProd
-
---main :: P.IO ()
---main = withProgName "ParMap" (generateFile emptyASt "ParMap" $ P.pure () P.>> compileAsLib "scalarProd" P.mempty scalarProd)

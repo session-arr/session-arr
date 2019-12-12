@@ -1,7 +1,4 @@
-{-# LANGUAGE MonoLocalBinds #-}
 {-# LANGUAGE RebindableSyntax #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE FlexibleContexts #-}
 module Mergesort where
 
 import Control.CArr.CSyn
@@ -13,7 +10,7 @@ msort n = fix n $ \ms x ->
   then x
   else vlet (sz / 2) $ \sz2 ->
     vlet (par ms $ vtake sz2 x) $ \xl ->
-    vlet (par ms $ vdrop sz2 x) $ \xr ->
+    vlet (ms $ vdrop sz2 x) $ \xr ->
     app (merge ()) $ pair (sz, pair (xl, xr))
 
 -- prevent it from being compiled
