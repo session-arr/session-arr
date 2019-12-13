@@ -257,10 +257,10 @@ This generates under `examples/plots/dotprod_4_k.pdf` and
 `examples/plots/dotprod_4_s.pdf` the speedups with varying `K`, or varying input
 size respectively.
 
-**Note**: to visualise the plots, we recommend using `docker cp`. This command
-must be run from outside the docker container. To copy all plots to a local
+***Note***: to visualise the plots, we recommend using `docker cp`. This command
+must be run from **outside** the docker container. To copy all plots to a local
 directory `<DIR>`, you can run `docker cp
-<NAME>:/home/cc20-artifact/session-arr/examples/plots <DIR>`, where `<NAME>` is the
+<NAME>:/home/cc20-artifact/session-arr/examples/plots <DIR>`.  `<NAME>` is the
 container name obtained via `docker ps -a`.
 
 ## Tutorial
