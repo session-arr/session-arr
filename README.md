@@ -258,9 +258,9 @@ This generates under `examples/plots/dotprod_4_k.pdf` and
 size respectively.
 
 **Note**: to visualise the plots, we recommend using `docker cp`. This command
-must be run from outside the docker container. To copy all plots to the current
-directory, you can run `docker cp
-<NAME>:/home/cc20-artifact/session-arr/examples/plots .`, where `<NAME>` is the
+must be run from outside the docker container. To copy all plots to a local
+directory `<DIR>`, you can run `docker cp
+<NAME>:/home/cc20-artifact/session-arr/examples/plots <DIR>`, where `<NAME>` is the
 container name obtained via `docker ps -a`.
 
 ## Tutorial

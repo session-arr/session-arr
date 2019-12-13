@@ -52,19 +52,19 @@ RUN useradd -ms /bin/bash cc20-artifact
 
 USER cc20-artifact
 
-# Vim Pathogen
-RUN mkdir -p /home/cc20-artifact/.vim/autoload ~/.vim/bundle && \
-    curl -LSso /home/cc20-artifact/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim && \
+RUN echo 'export PATH=/opt/ghc/8.6.5/bin/:/home/cc20-artifact/.local/bin:$PATH' >> \
+      /home/cc20-artifact/.bashrc && \
+    mkdir -p /home/cc20-artifact/.vim/autoload ~/.vim/bundle && \
+    curl -LSso /home/cc20-artifact/.vim/autoload/pathogen.vim \
+      https://tpo.pe/pathogen.vim && \
     echo 'execute pathogen#infect()' >> /home/cc20-artifact/.vimrc && \
     echo 'syntax on' >> /home/cc20-artifact/.vimrc && \
     echo 'filetype plugin indent on' >> /home/cc20-artifact/.vimrc && \
     echo 'colorscheme default' >> /home/cc20-artifact/.vimrc && \
-    git clone https://github.com/neovimhaskell/haskell-vim.git /home/cc20-artifact/.vim/bundle/haskell-vim
-
-# Clone artifact
-
-RUN git clone https://github.com/session-arr/session-arr.git \
-        /home/cc20-artifact/session-arr && \
+    git clone https://github.com/neovimhaskell/haskell-vim.git \
+       /home/cc20-artifact/.vim/bundle/haskell-vim && \
+    git clone https://github.com/session-arr/session-arr.git \
+       /home/cc20-artifact/session-arr && \
     echo 'system-ghc: true' >> /home/cc20-artifact/session-arr/stack.yaml
 
 WORKDIR /home/cc20-artifact/session-arr

@@ -5,7 +5,8 @@ NCORES=${1:-"${MAXCORES}"}
 NCORES=$((${NCORES}>=${MAXCORES} ? ${MAXCORES} : ${NCORES}))
 NAME=t_${NCORES}
 
-MAXSIZE=${2:-"30"}
+MAXSIZE=${2:-"15"}
+MAXSIZE=$((${MAXSIZE}<15 ? ${MAXSIZE} : 15))
 
 SIZES=
 for i in `seq 9 ${MAXSIZE}`
