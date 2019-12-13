@@ -58,12 +58,10 @@ RUN mkdir -p /home/cc20-artifact/.vim/autoload ~/.vim/bundle && \
     echo 'execute pathogen#infect()' >> /home/cc20-artifact/.vimrc && \
     echo 'syntax on' >> /home/cc20-artifact/.vimrc && \
     echo 'filetype plugin indent on' >> /home/cc20-artifact/.vimrc && \
+    echo 'colorscheme default' >> /home/cc20-artifact/.vimrc && \
     git clone https://github.com/neovimhaskell/haskell-vim.git /home/cc20-artifact/.vim/bundle/haskell-vim
 
-# # Clone artifact
-# RUN git clone https://github.com/session-arr/session-arr.git session-arr
-# WORKDIR /home/cc20-artifact/session-arr
-# RUN stack build
+# Clone artifact
 
 RUN git clone https://github.com/session-arr/session-arr.git \
         /home/cc20-artifact/session-arr && \
@@ -71,5 +69,6 @@ RUN git clone https://github.com/session-arr/session-arr.git \
 
 WORKDIR /home/cc20-artifact/session-arr
 RUN stack build
+ENV TERM xterm-256color
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash", "-l"]

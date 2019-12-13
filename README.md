@@ -86,6 +86,9 @@ msort = fix 2 $ \ms x ->
     vlet (ms $ vdrop sz2 x) $ \xr ->
     prim "merge" $ pair (sz, pair (xl, xr))
 ```
+   `prim "merge"` is a primitive function that needs to be implemented in C (see
+   Step 5).
+
 
 3. Instrument the code to produce a parallel version. This instrumentation
    should guide the annotation strategy described in the paper:
@@ -95,8 +98,11 @@ msort = fix 2 $ \ms x ->
     vlet (ms $ vdrop sz2 x) $ \xr ->
     prim "merge" $ pair (sz, pair (xl, xr))
 ```
+   `par` marks the left occurrences of `ms` to be run by a different
+   participant, and correspond to `ms @ r` in the paper, where `r` is a new
+   participant.
 
-4. Generate the (protocol) global type, and inspect the outcome of the achieved
+4. Infer the (protocol) global type, and inspect the outcome of the achieved
    parallelisation. Repeat step *3* if the outcome is undesired.
 ```
 msort ::: r0 -> r1
@@ -130,7 +136,7 @@ l1. r0 -> r2 : (l1).
 ```
 
 5. Implement the missing C functions. In this example this is function `merge`,
-   specified in the Haskell code as `prim "merge"`.
+   specified in the Haskell code (see Step 2) as `prim "merge"`.
 
 ```c
 vec_double_t merge(pair_int_pair_vec_double_vec_double_t in){
@@ -142,24 +148,24 @@ vec_double_t merge(pair_int_pair_vec_double_vec_double_t in){
 
 We are currently working on stabilising our prototype implementation, and
 implementing a number of practical improvements, including: structural recursion
-for global types and parallel code (to solve the LOC explosion that results of
+for global types and parallel code (to solve the LOC explosion that results from
 recursion unrolling), and encoding more program transformations. Since the
 only rewriting that we support at the moment is recursion unrolling, we
 provide construct `fix`, parameterised with an upper bound of allowed
 unrollings, that we use for a more user-friendly specification of recursive
-functions.
+functions than the use of hylomorphisms, but they are semantically equivalent.
 
 ## Benchmarks
 
 The script `./benchmark.sh` takes all the measurements that we used in our
-paper. Scripts `./plotall.sh <BENCHMARK> <CORES>` generates the speedup graphs
-that we used under `examples/plots`, for benchmark `<BENCHMARK>`, and execution
-times in `examples/<BENCHMARK>/data/t_CORES`. The script `./benchmark.sh` prints
-all the commands that are relevant to replicate the experiments manually.
+paper. Script `./plotall.sh <BENCHMARK> <CORES>` generates the speedup graphs
+under `examples/plots`, for benchmark `<BENCHMARK>`, and execution times in
+`examples/<BENCHMARK>/data/t_<CORES>`. The script `./benchmark.sh` prints all
+the commands that are relevant to replicate the experiments manually.
 
-**Note**: the amount of cores used, the maximum input size (must be >=15), and
-the number of repetitions per experiment can be configures by setting the
-necessary environment variables:
+**Note**: the number of cores (must be less than the number of physical cores),
+the maximum input size (must be >=15), and the number of repetitions per
+experiment can be configures by setting the necessary environment variables:
 
 ```
 CORES=4 REPETITIONS=50 MAXSIZE=30 ./benchmark.sh
@@ -188,10 +194,10 @@ dotProd32
 dotProd64
 ```
 
-Command `session-arrc` takes module `DotProd.hs`, finds all functions that
-can be compiled to C, and produces two files: `DotProd.c` and `DotProd.h`.
-In the same directory, we find `main.c`, that contains the implementation
-of the primitive functions used in `DotProd.hs`, as well as the main function
+The program `session-arrc` takes module `DotProd.hs`, finds all functions that
+can be compiled to C, and produces two files: `DotProd.c` and `DotProd.h`.  In
+the same directory, we find `main.c`, that contains the implementation of the
+primitive functions used in `DotProd.hs`, as well as the main function
 instrumented to measure execution times. We compile the C code as follows:
 
 ```
@@ -251,9 +257,11 @@ This generates under `examples/plots/dotprod_4_k.pdf` and
 `examples/plots/dotprod_4_s.pdf` the speedups with varying `K`, or varying input
 size respectively.
 
-**Note**: to visualise the plots, we recommend using `docker cp`, e.g. `docker
-cp <NAME>:/home/cc20-artifact/session-arr/examples/plots .`, where `<NAME>` is
-the container name obtained via `docker ps -a`.
+**Note**: to visualise the plots, we recommend using `docker cp`. This command
+must be run from outside the docker container. To copy all plots to the current
+directory, you can run `docker cp
+<NAME>:/home/cc20-artifact/session-arr/examples/plots .`, where `<NAME>` is the
+container name obtained via `docker ps -a`.
 
 ## Tutorial
 
