@@ -634,7 +634,7 @@ choiceGt p (OGT l lo) (OGT r ro) =
 
 cChoice :: PID
         -> [MPST.Role] -> (TGT -> TGT) -> (TGT -> TGT) -> TGT -> TGT
-cChoice _ [] _ _ = error "impossible choice"
+cChoice _ [] f _ = f
 cChoice p (q:qs) l r = \k ->
   case k of
     ND lk rk -> Choice rp q (cAll choiceL l qs lk) (cAll choiceR r qs rk)

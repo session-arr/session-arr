@@ -265,8 +265,252 @@ container name obtained via `docker ps -a`.
 
 ## Tutorial
 
-### Haskell Code
+This section is aimed at providing hands-on experience with building
+message-passing parallel code using our tool.  The main directory for this
+section is `tutorial`. It only contains one file:
+
+- tutorial/Tutorial.hs
+
+```haskell
+module Tutorial where
+
+maxL :: [Int] -> Int
+maxL []  = 0
+maxL [x] = x
+maxL ls = max (maxL $ take sz ls) (maxL $ drop sz ls)
+  where
+    sz = length ls `div` 2
+```
+
+### Modifying Haskell Code
+
+#### 1. Converting to `Alg`
+
+**Run `vim examples/Tutorial.hs`, and add the following language extension and
+import.**
+
+```haskell
+{-# LANGUAGE RebindableSyntax #-}
+module Tutorial where
+
+import Control.CArr.CSyn
+
+maxL :: PAlg f => f [Int] Int
+maxL []  = 0
+maxL [x] = x
+maxL ls = max (maxL $ take sz ls) (maxL $ drop sz ls)
+  where
+    sz = length ls `div` 2
+```
+
+Due to `RebindableSyntax`, now the function should not compile:
+```
+$ stack exec ghc -- Tutorial.hs
+[1 of 1] Compiling Tutorial         ( Tutorial.hs, interpreted )
+
+Tutorial.hs:9:11: error:
+    • Variable not in scope: max :: Int -> Int -> Int
+    • Perhaps you meant ‘maxL’ (line 7)
+  |
+9 | maxL ls = max (maxL $ take sz ls) (maxL $ drop sz ls)
+  |           ^^^
+
+...
+```
+
+**Convert to `Alg`**
+The next step is to translate the difference language features to the constructs
+supported by `PAlg`. There are mainly three features: *pattern matching*,
+*recursion* and *where clauses*. We will substitute pattern matching by if
+statements on the length of the list. To handle recursion and where clauses, we
+use the following constructs:
+
+```haskell
+fix :: (PAlg t, CVal b, CVal a)
+    => Int
+    -> (forall f. PAlg f => (forall ctx. Expr f ctx a -> Expr f ctx b)
+                         -> Var f a a -> Expr f a b)
+    -> t a b
+vlet :: PAlg t
+     => Expr t ctx a
+     -> (CVal a => Var t (a, ctx) a -> Expr t (a, ctx) b)
+     -> Expr t ctx b
+```
+
+Type `Expr f ctx a` captures expressions of language `f`, inside context `ctx`,
+of type `a`. Type `Var f ctx a` is a variable of type `a` inside context `ctx`.
+`CVal` constraints type `a` to be _compilable to C_. Contexts are basically
+n-tuples of elements.
+
+To build a recursive function, we write `fix k (\rec x -> E)`, where `E` is an
+expression that may use the recursive call `rec`, and whose input is `x`.  This
+construct produces a *closed* function of type `t a b`. Parameter `k` will be
+used to control the recursion unrolling. We set it to `1` for this tutorial.
+
+**Edit `Tutorial.hs` and write the following**
+
+```haskell
+maxL :: PAlg f => f [Int] Int
+maxL = fix 1 $ \rmax ls ->
+  vlet (vsize ls) $ \sz ->
+    if sz == 0 then 0
+    else if sz == 1 then prim "head" ls
+    else prim "max" $ pair (rmax $ vtake (sz / 2) ls, rmax $ vdrop (sz / 2) ls)
+```
+
+Note that we write `prim "max"` and `prim "head`. We are leaving these functions
+unspecified, and will implement then in C in step **4**.
+
+The code now compiles:
+```
+stack exec -- ghci Tutorial.hs
+GHCi, version 8.6.5: http://www.haskell.org/ghc/  :? for help
+[1 of 1] Compiling Tutorial         ( Tutorial.hs, interpreted )
+Ok, one module loaded.
+*Tutorial>
+```
+
+#### 2. Introduce annotations
+
+Construct `par` works as a function application, but it will annotate the
+function with a new, fresh participant identifier.
+```haskell
+par :: PAlg t
+    => (Var t ctx a -> Expr t ctx b)
+    -> Expr t ctx a
+    -> Expr t ctx b
+```
+
+You can use this function to introduce annotations. E.g.:
+```haskell
+maxL :: PAlg f => f [Int] Int
+maxL = fix 1 $ \rmax ls ->
+  vlet (vsize ls) $ \sz ->
+    if sz == 0 then 0
+    else if sz == 1 then prim "head" ls
+    else prim "max" $ pair (par rmax $ vtake (sz / 2) ls, par rmax $ vdrop (sz / 2) ls)
+```
+Additionally, you can use the following construct:
+
+```
+(@@) :: PAlg t => (Var t ctx a -> Expr t ctx b) -> Prelude.Integer
+     -> Expr t ctx a -> Expr t ctx b
+```
+
+This will run a function at a particular participant identifier.
+
+
+#### 3. Generate global type
+
+Inspect the achieved parallelisation by running:
+
+```
+$ stack exec -- session-arrc --infer=maxL Tutorial.hs
+$ cat Tutorial_maxL.mpst
+$ maxL ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r1
+    {l0. r0 -> r2 : (l0).
+         end;
+    l1. r0 -> r2 : (l1).
+        r0 -> r1 : (ECVec ECInt).
+        r0 -> r2 : (ECVec ECInt).
+        r2 -> r1 : (ECInt).
+        r1 -> r0 : (ECInt).
+        end}}
+```
+
+Change the annotations, and inspect alternative parallelisations to see the
+difference in the global types.
+
+#### 4. Compile to C
+
+The final step involves the compilation to C, using the following command:
+```
+$ stack exec -- session-arrc Tutorial.hs
+
+Found functions:
+maxL
+```
+
+Inspect files `Tutorial.c` and `Tutorial.h` to see the result. File
+`Tutorial.h` should contain a number of type definitions, as well as three
+function signatures:
+
+```c
+int head(vec_int_t);
+int max(pair_int_int_t);
+int maxL(vec_int_t);
+```
+
+Function `maxL` is the compiled code for our Haskell `maxL` function, and `head`
+and `max` are our primitive functions.
+
 
 ### Implementing Missing C Functions
 
-### Execution
+Edit file `main.c`, include `Tutorial.h`, and write a small test case. By
+reading `Tutorial.h`, you can observe that vectors are structs that contain
+a pointer and a size:
+```c
+typedef struct vec_int {
+            int * elems; size_t size;
+        } vec_int_t;
+```
+
+You can use this information to build the test case:
+```c
+#include "Tutorial.h"
+
+int main(){
+  int test_data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  vec_int_t in = { test_data, 10 };
+
+  printf("The maximum is: %d\n", maxL(in));
+}
+```
+
+If you compile this code, GCC will complain with undefined references to `max`
+and `head`.
+
+```
+$ gcc Tutorial.c main.c -o tutorial -lpthread
+/usr/bin/ld: /tmp/ccxYdxMU.o: in function `maxL_part_0':
+Tutorial.c:(.text+0x780): undefined reference to `head'
+/usr/bin/ld: /tmp/ccxYdxMU.o: in function `fn':
+Tutorial.c:(.text+0x98e): undefined reference to `head'
+/usr/bin/ld: Tutorial.c:(.text+0xa2d): undefined reference to `max'
+/usr/bin/ld: /tmp/ccxYdxMU.o: in function `maxL_part_1':
+Tutorial.c:(.text+0xb4e): undefined reference to `max'
+collect2: error: ld returned 1 exit status
+```
+
+To fix the errors, provide an implementation satisfying the interface:
+```c
+#include "Tutorial.h"
+
+int max(pair_int_int_t x){
+  return (x.fst < x.snd ? x.snd : x.fst);
+}
+
+int head (vec_int_t x){
+  return (x.elems[0]);
+}
+
+
+int main(){
+  int test_data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+  vec_int_t in = { test_data, 10 };
+
+  printf("The maximum is: %d\n", maxL(in));
+}
+```
+
+It should now be possible to compile and run the program:
+```
+$ gcc Tutorial.c main.c -o tutorial -lpthread
+$ ./tutorial
+The maximum is: 10
+```
