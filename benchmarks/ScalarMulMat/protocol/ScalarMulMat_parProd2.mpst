@@ -1,0 +1,5 @@
+parProd2 ::: r0 -> r1 : (ECVec (ECVec ECDbl)).
+r0 -> r2 : (ECVec (ECVec ECDbl)).
+r1 -> r0 : (ECVec (ECVec ECDbl)).
+r2 -> r0 : (ECVec (ECVec ECDbl)).
+end

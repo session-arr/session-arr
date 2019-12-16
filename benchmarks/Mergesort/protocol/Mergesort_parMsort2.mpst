@@ -1,0 +1,56 @@
+parMsort2 ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     r0 -> r3 : (l0).
+     r0 -> r4 : (l0).
+     r0 -> r5 : (l0).
+     r0 -> r6 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r3 : (l1).
+    r0 -> r4 : (l1).
+    r0 -> r5 : (l1).
+    r0 -> r6 : (l1).
+    r0 -> r1 : (ECVec ECDbl).
+    r1 -> r2
+    {l0. r1 -> r3 : (l0).
+         r0 -> r4 : (ECVec ECDbl).
+         r4 -> r5
+         {l0. r4 -> r6 : (l0).
+              r1 -> r0 : (l0).
+              r1 -> r0 : (ECVec ECDbl).
+              r4 -> r0 : (l0).
+              r4 -> r0 : (ECVec ECDbl).
+              end;
+         l1. r4 -> r6 : (l1).
+             r4 -> r5 : (ECVec ECDbl).
+             r4 -> r6 : (ECVec ECDbl).
+             r5 -> r4 : (ECVec ECDbl).
+             r6 -> r4 : (ECVec ECDbl).
+             r1 -> r0 : (l1).
+             r1 -> r0 : (ECVec ECDbl).
+             r4 -> r0 : (l1).
+             r4 -> r0 : (ECVec ECDbl).
+             end};
+    l1. r1 -> r3 : (l1).
+        r1 -> r2 : (ECVec ECDbl).
+        r1 -> r3 : (ECVec ECDbl).
+        r2 -> r1 : (ECVec ECDbl).
+        r3 -> r1 : (ECVec ECDbl).
+        r0 -> r4 : (ECVec ECDbl).
+        r4 -> r5
+        {l0. r4 -> r6 : (l0).
+             r1 -> r0 : (l0).
+             r1 -> r0 : (ECVec ECDbl).
+             r4 -> r0 : (l0).
+             r4 -> r0 : (ECVec ECDbl).
+             end;
+        l1. r4 -> r6 : (l1).
+            r4 -> r5 : (ECVec ECDbl).
+            r4 -> r6 : (ECVec ECDbl).
+            r5 -> r4 : (ECVec ECDbl).
+            r6 -> r4 : (ECVec ECDbl).
+            r1 -> r0 : (l1).
+            r1 -> r0 : (ECVec ECDbl).
+            r4 -> r0 : (l1).
+            r4 -> r0 : (ECVec ECDbl).
+            end}}}

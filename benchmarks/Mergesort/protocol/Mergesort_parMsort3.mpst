@@ -1,0 +1,465 @@
+parMsort3 ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     r0 -> r3 : (l0).
+     r0 -> r4 : (l0).
+     r0 -> r5 : (l0).
+     r0 -> r6 : (l0).
+     r0 -> r7 : (l0).
+     r0 -> r8 : (l0).
+     r0 -> r9 : (l0).
+     r0 -> r10 : (l0).
+     r0 -> r11 : (l0).
+     r0 -> r12 : (l0).
+     r0 -> r13 : (l0).
+     r0 -> r14 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r3 : (l1).
+    r0 -> r4 : (l1).
+    r0 -> r5 : (l1).
+    r0 -> r6 : (l1).
+    r0 -> r7 : (l1).
+    r0 -> r8 : (l1).
+    r0 -> r9 : (l1).
+    r0 -> r10 : (l1).
+    r0 -> r11 : (l1).
+    r0 -> r12 : (l1).
+    r0 -> r13 : (l1).
+    r0 -> r14 : (l1).
+    r0 -> r1 : (ECVec ECDbl).
+    r1 -> r2
+    {l0. r1 -> r3 : (l0).
+         r1 -> r4 : (l0).
+         r1 -> r5 : (l0).
+         r1 -> r6 : (l0).
+         r1 -> r7 : (l0).
+         r0 -> r8 : (ECVec ECDbl).
+         r8 -> r9
+         {l0. r8 -> r10 : (l0).
+              r8 -> r11 : (l0).
+              r8 -> r12 : (l0).
+              r8 -> r13 : (l0).
+              r8 -> r14 : (l0).
+              r1 -> r0 : (l0).
+              r1 -> r0 : (ECVec ECDbl).
+              r8 -> r0 : (l0).
+              r8 -> r0 : (ECVec ECDbl).
+              end;
+         l1. r8 -> r10 : (l1).
+             r8 -> r11 : (l1).
+             r8 -> r12 : (l1).
+             r8 -> r13 : (l1).
+             r8 -> r14 : (l1).
+             r8 -> r9 : (ECVec ECDbl).
+             r9 -> r10
+             {l0. r9 -> r11 : (l0).
+                  r8 -> r12 : (ECVec ECDbl).
+                  r12 -> r13
+                  {l0. r12 -> r14 : (l0).
+                       r9 -> r8 : (l0).
+                       r9 -> r8 : (ECVec ECDbl).
+                       r12 -> r8 : (l0).
+                       r12 -> r8 : (ECVec ECDbl).
+                       r1 -> r0 : (l1).
+                       r1 -> r0 : (ECVec ECDbl).
+                       r8 -> r0 : (l1).
+                       r8 -> r0 : (ECVec ECDbl).
+                       end;
+                  l1. r12 -> r14 : (l1).
+                      r12 -> r13 : (ECVec ECDbl).
+                      r12 -> r14 : (ECVec ECDbl).
+                      r13 -> r12 : (ECVec ECDbl).
+                      r14 -> r12 : (ECVec ECDbl).
+                      r9 -> r8 : (l1).
+                      r9 -> r8 : (ECVec ECDbl).
+                      r12 -> r8 : (l1).
+                      r12 -> r8 : (ECVec ECDbl).
+                      r1 -> r0 : (l1).
+                      r1 -> r0 : (ECVec ECDbl).
+                      r8 -> r0 : (l1).
+                      r8 -> r0 : (ECVec ECDbl).
+                      end};
+             l1. r9 -> r11 : (l1).
+                 r9 -> r10 : (ECVec ECDbl).
+                 r9 -> r11 : (ECVec ECDbl).
+                 r10 -> r9 : (ECVec ECDbl).
+                 r11 -> r9 : (ECVec ECDbl).
+                 r8 -> r12 : (ECVec ECDbl).
+                 r12 -> r13
+                 {l0. r12 -> r14 : (l0).
+                      r9 -> r8 : (l0).
+                      r9 -> r8 : (ECVec ECDbl).
+                      r12 -> r8 : (l0).
+                      r12 -> r8 : (ECVec ECDbl).
+                      r1 -> r0 : (l1).
+                      r1 -> r0 : (ECVec ECDbl).
+                      r8 -> r0 : (l1).
+                      r8 -> r0 : (ECVec ECDbl).
+                      end;
+                 l1. r12 -> r14 : (l1).
+                     r12 -> r13 : (ECVec ECDbl).
+                     r12 -> r14 : (ECVec ECDbl).
+                     r13 -> r12 : (ECVec ECDbl).
+                     r14 -> r12 : (ECVec ECDbl).
+                     r9 -> r8 : (l1).
+                     r9 -> r8 : (ECVec ECDbl).
+                     r12 -> r8 : (l1).
+                     r12 -> r8 : (ECVec ECDbl).
+                     r1 -> r0 : (l1).
+                     r1 -> r0 : (ECVec ECDbl).
+                     r8 -> r0 : (l1).
+                     r8 -> r0 : (ECVec ECDbl).
+                     end}}};
+    l1. r1 -> r3 : (l1).
+        r1 -> r4 : (l1).
+        r1 -> r5 : (l1).
+        r1 -> r6 : (l1).
+        r1 -> r7 : (l1).
+        r1 -> r2 : (ECVec ECDbl).
+        r2 -> r3
+        {l0. r2 -> r4 : (l0).
+             r1 -> r5 : (ECVec ECDbl).
+             r5 -> r6
+             {l0. r5 -> r7 : (l0).
+                  r2 -> r1 : (l0).
+                  r2 -> r1 : (ECVec ECDbl).
+                  r5 -> r1 : (l0).
+                  r5 -> r1 : (ECVec ECDbl).
+                  r0 -> r8 : (ECVec ECDbl).
+                  r8 -> r9
+                  {l0. r8 -> r10 : (l0).
+                       r8 -> r11 : (l0).
+                       r8 -> r12 : (l0).
+                       r8 -> r13 : (l0).
+                       r8 -> r14 : (l0).
+                       r1 -> r0 : (l0).
+                       r1 -> r0 : (ECVec ECDbl).
+                       r8 -> r0 : (l0).
+                       r8 -> r0 : (ECVec ECDbl).
+                       end;
+                  l1. r8 -> r10 : (l1).
+                      r8 -> r11 : (l1).
+                      r8 -> r12 : (l1).
+                      r8 -> r13 : (l1).
+                      r8 -> r14 : (l1).
+                      r8 -> r9 : (ECVec ECDbl).
+                      r9 -> r10
+                      {l0. r9 -> r11 : (l0).
+                           r8 -> r12 : (ECVec ECDbl).
+                           r12 -> r13
+                           {l0. r12 -> r14 : (l0).
+                                r9 -> r8 : (l0).
+                                r9 -> r8 : (ECVec ECDbl).
+                                r12 -> r8 : (l0).
+                                r12 -> r8 : (ECVec ECDbl).
+                                r1 -> r0 : (l1).
+                                r1 -> r0 : (ECVec ECDbl).
+                                r8 -> r0 : (l1).
+                                r8 -> r0 : (ECVec ECDbl).
+                                end;
+                           l1. r12 -> r14 : (l1).
+                               r12 -> r13 : (ECVec ECDbl).
+                               r12 -> r14 : (ECVec ECDbl).
+                               r13 -> r12 : (ECVec ECDbl).
+                               r14 -> r12 : (ECVec ECDbl).
+                               r9 -> r8 : (l1).
+                               r9 -> r8 : (ECVec ECDbl).
+                               r12 -> r8 : (l1).
+                               r12 -> r8 : (ECVec ECDbl).
+                               r1 -> r0 : (l1).
+                               r1 -> r0 : (ECVec ECDbl).
+                               r8 -> r0 : (l1).
+                               r8 -> r0 : (ECVec ECDbl).
+                               end};
+                      l1. r9 -> r11 : (l1).
+                          r9 -> r10 : (ECVec ECDbl).
+                          r9 -> r11 : (ECVec ECDbl).
+                          r10 -> r9 : (ECVec ECDbl).
+                          r11 -> r9 : (ECVec ECDbl).
+                          r8 -> r12 : (ECVec ECDbl).
+                          r12 -> r13
+                          {l0. r12 -> r14 : (l0).
+                               r9 -> r8 : (l0).
+                               r9 -> r8 : (ECVec ECDbl).
+                               r12 -> r8 : (l0).
+                               r12 -> r8 : (ECVec ECDbl).
+                               r1 -> r0 : (l1).
+                               r1 -> r0 : (ECVec ECDbl).
+                               r8 -> r0 : (l1).
+                               r8 -> r0 : (ECVec ECDbl).
+                               end;
+                          l1. r12 -> r14 : (l1).
+                              r12 -> r13 : (ECVec ECDbl).
+                              r12 -> r14 : (ECVec ECDbl).
+                              r13 -> r12 : (ECVec ECDbl).
+                              r14 -> r12 : (ECVec ECDbl).
+                              r9 -> r8 : (l1).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l1).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end}}};
+             l1. r5 -> r7 : (l1).
+                 r5 -> r6 : (ECVec ECDbl).
+                 r5 -> r7 : (ECVec ECDbl).
+                 r6 -> r5 : (ECVec ECDbl).
+                 r7 -> r5 : (ECVec ECDbl).
+                 r2 -> r1 : (l1).
+                 r2 -> r1 : (ECVec ECDbl).
+                 r5 -> r1 : (l1).
+                 r5 -> r1 : (ECVec ECDbl).
+                 r0 -> r8 : (ECVec ECDbl).
+                 r8 -> r9
+                 {l0. r8 -> r10 : (l0).
+                      r8 -> r11 : (l0).
+                      r8 -> r12 : (l0).
+                      r8 -> r13 : (l0).
+                      r8 -> r14 : (l0).
+                      r1 -> r0 : (l0).
+                      r1 -> r0 : (ECVec ECDbl).
+                      r8 -> r0 : (l0).
+                      r8 -> r0 : (ECVec ECDbl).
+                      end;
+                 l1. r8 -> r10 : (l1).
+                     r8 -> r11 : (l1).
+                     r8 -> r12 : (l1).
+                     r8 -> r13 : (l1).
+                     r8 -> r14 : (l1).
+                     r8 -> r9 : (ECVec ECDbl).
+                     r9 -> r10
+                     {l0. r9 -> r11 : (l0).
+                          r8 -> r12 : (ECVec ECDbl).
+                          r12 -> r13
+                          {l0. r12 -> r14 : (l0).
+                               r9 -> r8 : (l0).
+                               r9 -> r8 : (ECVec ECDbl).
+                               r12 -> r8 : (l0).
+                               r12 -> r8 : (ECVec ECDbl).
+                               r1 -> r0 : (l1).
+                               r1 -> r0 : (ECVec ECDbl).
+                               r8 -> r0 : (l1).
+                               r8 -> r0 : (ECVec ECDbl).
+                               end;
+                          l1. r12 -> r14 : (l1).
+                              r12 -> r13 : (ECVec ECDbl).
+                              r12 -> r14 : (ECVec ECDbl).
+                              r13 -> r12 : (ECVec ECDbl).
+                              r14 -> r12 : (ECVec ECDbl).
+                              r9 -> r8 : (l1).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l1).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end};
+                     l1. r9 -> r11 : (l1).
+                         r9 -> r10 : (ECVec ECDbl).
+                         r9 -> r11 : (ECVec ECDbl).
+                         r10 -> r9 : (ECVec ECDbl).
+                         r11 -> r9 : (ECVec ECDbl).
+                         r8 -> r12 : (ECVec ECDbl).
+                         r12 -> r13
+                         {l0. r12 -> r14 : (l0).
+                              r9 -> r8 : (l0).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l0).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end;
+                         l1. r12 -> r14 : (l1).
+                             r12 -> r13 : (ECVec ECDbl).
+                             r12 -> r14 : (ECVec ECDbl).
+                             r13 -> r12 : (ECVec ECDbl).
+                             r14 -> r12 : (ECVec ECDbl).
+                             r9 -> r8 : (l1).
+                             r9 -> r8 : (ECVec ECDbl).
+                             r12 -> r8 : (l1).
+                             r12 -> r8 : (ECVec ECDbl).
+                             r1 -> r0 : (l1).
+                             r1 -> r0 : (ECVec ECDbl).
+                             r8 -> r0 : (l1).
+                             r8 -> r0 : (ECVec ECDbl).
+                             end}}}};
+        l1. r2 -> r4 : (l1).
+            r2 -> r3 : (ECVec ECDbl).
+            r2 -> r4 : (ECVec ECDbl).
+            r3 -> r2 : (ECVec ECDbl).
+            r4 -> r2 : (ECVec ECDbl).
+            r1 -> r5 : (ECVec ECDbl).
+            r5 -> r6
+            {l0. r5 -> r7 : (l0).
+                 r2 -> r1 : (l0).
+                 r2 -> r1 : (ECVec ECDbl).
+                 r5 -> r1 : (l0).
+                 r5 -> r1 : (ECVec ECDbl).
+                 r0 -> r8 : (ECVec ECDbl).
+                 r8 -> r9
+                 {l0. r8 -> r10 : (l0).
+                      r8 -> r11 : (l0).
+                      r8 -> r12 : (l0).
+                      r8 -> r13 : (l0).
+                      r8 -> r14 : (l0).
+                      r1 -> r0 : (l0).
+                      r1 -> r0 : (ECVec ECDbl).
+                      r8 -> r0 : (l0).
+                      r8 -> r0 : (ECVec ECDbl).
+                      end;
+                 l1. r8 -> r10 : (l1).
+                     r8 -> r11 : (l1).
+                     r8 -> r12 : (l1).
+                     r8 -> r13 : (l1).
+                     r8 -> r14 : (l1).
+                     r8 -> r9 : (ECVec ECDbl).
+                     r9 -> r10
+                     {l0. r9 -> r11 : (l0).
+                          r8 -> r12 : (ECVec ECDbl).
+                          r12 -> r13
+                          {l0. r12 -> r14 : (l0).
+                               r9 -> r8 : (l0).
+                               r9 -> r8 : (ECVec ECDbl).
+                               r12 -> r8 : (l0).
+                               r12 -> r8 : (ECVec ECDbl).
+                               r1 -> r0 : (l1).
+                               r1 -> r0 : (ECVec ECDbl).
+                               r8 -> r0 : (l1).
+                               r8 -> r0 : (ECVec ECDbl).
+                               end;
+                          l1. r12 -> r14 : (l1).
+                              r12 -> r13 : (ECVec ECDbl).
+                              r12 -> r14 : (ECVec ECDbl).
+                              r13 -> r12 : (ECVec ECDbl).
+                              r14 -> r12 : (ECVec ECDbl).
+                              r9 -> r8 : (l1).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l1).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end};
+                     l1. r9 -> r11 : (l1).
+                         r9 -> r10 : (ECVec ECDbl).
+                         r9 -> r11 : (ECVec ECDbl).
+                         r10 -> r9 : (ECVec ECDbl).
+                         r11 -> r9 : (ECVec ECDbl).
+                         r8 -> r12 : (ECVec ECDbl).
+                         r12 -> r13
+                         {l0. r12 -> r14 : (l0).
+                              r9 -> r8 : (l0).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l0).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end;
+                         l1. r12 -> r14 : (l1).
+                             r12 -> r13 : (ECVec ECDbl).
+                             r12 -> r14 : (ECVec ECDbl).
+                             r13 -> r12 : (ECVec ECDbl).
+                             r14 -> r12 : (ECVec ECDbl).
+                             r9 -> r8 : (l1).
+                             r9 -> r8 : (ECVec ECDbl).
+                             r12 -> r8 : (l1).
+                             r12 -> r8 : (ECVec ECDbl).
+                             r1 -> r0 : (l1).
+                             r1 -> r0 : (ECVec ECDbl).
+                             r8 -> r0 : (l1).
+                             r8 -> r0 : (ECVec ECDbl).
+                             end}}};
+            l1. r5 -> r7 : (l1).
+                r5 -> r6 : (ECVec ECDbl).
+                r5 -> r7 : (ECVec ECDbl).
+                r6 -> r5 : (ECVec ECDbl).
+                r7 -> r5 : (ECVec ECDbl).
+                r2 -> r1 : (l1).
+                r2 -> r1 : (ECVec ECDbl).
+                r5 -> r1 : (l1).
+                r5 -> r1 : (ECVec ECDbl).
+                r0 -> r8 : (ECVec ECDbl).
+                r8 -> r9
+                {l0. r8 -> r10 : (l0).
+                     r8 -> r11 : (l0).
+                     r8 -> r12 : (l0).
+                     r8 -> r13 : (l0).
+                     r8 -> r14 : (l0).
+                     r1 -> r0 : (l0).
+                     r1 -> r0 : (ECVec ECDbl).
+                     r8 -> r0 : (l0).
+                     r8 -> r0 : (ECVec ECDbl).
+                     end;
+                l1. r8 -> r10 : (l1).
+                    r8 -> r11 : (l1).
+                    r8 -> r12 : (l1).
+                    r8 -> r13 : (l1).
+                    r8 -> r14 : (l1).
+                    r8 -> r9 : (ECVec ECDbl).
+                    r9 -> r10
+                    {l0. r9 -> r11 : (l0).
+                         r8 -> r12 : (ECVec ECDbl).
+                         r12 -> r13
+                         {l0. r12 -> r14 : (l0).
+                              r9 -> r8 : (l0).
+                              r9 -> r8 : (ECVec ECDbl).
+                              r12 -> r8 : (l0).
+                              r12 -> r8 : (ECVec ECDbl).
+                              r1 -> r0 : (l1).
+                              r1 -> r0 : (ECVec ECDbl).
+                              r8 -> r0 : (l1).
+                              r8 -> r0 : (ECVec ECDbl).
+                              end;
+                         l1. r12 -> r14 : (l1).
+                             r12 -> r13 : (ECVec ECDbl).
+                             r12 -> r14 : (ECVec ECDbl).
+                             r13 -> r12 : (ECVec ECDbl).
+                             r14 -> r12 : (ECVec ECDbl).
+                             r9 -> r8 : (l1).
+                             r9 -> r8 : (ECVec ECDbl).
+                             r12 -> r8 : (l1).
+                             r12 -> r8 : (ECVec ECDbl).
+                             r1 -> r0 : (l1).
+                             r1 -> r0 : (ECVec ECDbl).
+                             r8 -> r0 : (l1).
+                             r8 -> r0 : (ECVec ECDbl).
+                             end};
+                    l1. r9 -> r11 : (l1).
+                        r9 -> r10 : (ECVec ECDbl).
+                        r9 -> r11 : (ECVec ECDbl).
+                        r10 -> r9 : (ECVec ECDbl).
+                        r11 -> r9 : (ECVec ECDbl).
+                        r8 -> r12 : (ECVec ECDbl).
+                        r12 -> r13
+                        {l0. r12 -> r14 : (l0).
+                             r9 -> r8 : (l0).
+                             r9 -> r8 : (ECVec ECDbl).
+                             r12 -> r8 : (l0).
+                             r12 -> r8 : (ECVec ECDbl).
+                             r1 -> r0 : (l1).
+                             r1 -> r0 : (ECVec ECDbl).
+                             r8 -> r0 : (l1).
+                             r8 -> r0 : (ECVec ECDbl).
+                             end;
+                        l1. r12 -> r14 : (l1).
+                            r12 -> r13 : (ECVec ECDbl).
+                            r12 -> r14 : (ECVec ECDbl).
+                            r13 -> r12 : (ECVec ECDbl).
+                            r14 -> r12 : (ECVec ECDbl).
+                            r9 -> r8 : (l1).
+                            r9 -> r8 : (ECVec ECDbl).
+                            r12 -> r8 : (l1).
+                            r12 -> r8 : (ECVec ECDbl).
+                            r1 -> r0 : (l1).
+                            r1 -> r0 : (ECVec ECDbl).
+                            r8 -> r0 : (l1).
+                            r8 -> r0 : (ECVec ECDbl).
+                            end}}}}}}}

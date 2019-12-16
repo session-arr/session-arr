@@ -1,0 +1,9 @@
+parMsort1 ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r1 : (ECVec ECDbl).
+    r0 -> r2 : (ECVec ECDbl).
+    r1 -> r0 : (ECVec ECDbl).
+    r2 -> r0 : (ECVec ECDbl).
+    end}

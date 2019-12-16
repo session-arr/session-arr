@@ -1,0 +1,5 @@
+dotProd1 ::: r0 -> r1
+{l0. end;
+l1. r0 -> r1 : (ECPair (ECVec ECDbl) (ECVec ECDbl)).
+    r1 -> r0 : (ECDbl).
+    end}

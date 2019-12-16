@@ -1,0 +1,17 @@
+dotProd4 ::: r0 -> r1
+{l0. r0 -> r2 : (l0).
+     r0 -> r3 : (l0).
+     r0 -> r4 : (l0).
+     end;
+l1. r0 -> r2 : (l1).
+    r0 -> r3 : (l1).
+    r0 -> r4 : (l1).
+    r0 -> r1 : (ECPair (ECVec ECDbl) (ECVec ECDbl)).
+    r0 -> r2 : (ECPair (ECVec ECDbl) (ECVec ECDbl)).
+    r0 -> r3 : (ECPair (ECVec ECDbl) (ECVec ECDbl)).
+    r0 -> r4 : (ECPair (ECVec ECDbl) (ECVec ECDbl)).
+    r2 -> r1 : (ECDbl).
+    r4 -> r3 : (ECDbl).
+    r3 -> r1 : (ECDbl).
+    r1 -> r0 : (ECDbl).
+    end}
