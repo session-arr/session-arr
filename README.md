@@ -165,7 +165,7 @@ the commands that are relevant to replicate the experiments manually.
 
 **Note**: the number of cores (must be less than the number of physical cores),
 the maximum input size (must be >=15), and the number of repetitions per
-experiment can be configures by setting the necessary environment variables:
+experiment can be configured by setting the necessary environment variables:
 
 ```
 CORES=4 REPETITIONS=50 MAXSIZE=30 ./benchmark.sh
