@@ -9,3 +9,9 @@ examples/*/*
 !examples/*/*.sh
 !examples/*/main.c
 !examples/*/Makefile
+
+tutorial/*
+!tutorial/*.hs
+!tutorial/*.sh
+!tutorial/main.c
+!tutorial/Makefile
