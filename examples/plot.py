@@ -1,5 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys, os
 
 import re
@@ -7,6 +9,7 @@ import re
 from itertools import cycle
 
 import matplotlib
+from six.moves import zip
 matplotlib.use('PDF')
 
 import matplotlib.pyplot as plt
@@ -15,8 +18,6 @@ from matplotlib.lines import Line2D
 
 text_style = dict(fontsize='xx-large', fontdict={'family': 'monospace'})
 
-from pint import UnitRegistry
-ureg = UnitRegistry()
 
 def plotter(ax, data1, list_data2, param_dict):
     """
@@ -51,7 +52,7 @@ def plotter(ax, data1, list_data2, param_dict):
 def main(argv):
     ninputs = len(argv)
     if ninputs <= 2:
-        print "Usage: ", os.path.basename(sys.argv[0]), " <max_cores> <out_file> <time_file>"
+        print("Usage: ", os.path.basename(sys.argv[0]), " <max_cores> <out_file> <time_file>")
         sys.exit(-1)
     in_fp_file = sys.argv[3]
     out_filepath = sys.argv[2]
@@ -77,13 +78,13 @@ def main(argv):
             sS = search_S.search(line)
             if sS is not None:
                 current_S = int(sS.group(1))
-                print "Current size: ", current_S
+                print("Current size: ", current_S)
                 data[current_S] = {}
 
             sK = search_K.search(line)
             if sK is not None:
                 current_K = sK.group(1)
-                print "Current K: ", current_K
+                print("Current K: ", current_K)
                 data[current_S][current_K] = (0, 0)
 
             sT = search_T.search(line)
@@ -95,9 +96,9 @@ def main(argv):
             if sD is not None:
                 current_D = float(sD.group(1))
                 data[current_S][current_K] = (data[current_S][current_K][0], current_D)
-                print "Current T_D: ", data[current_S][current_K]
+                print("Current T_D: ", data[current_S][current_K])
     except AttributeError:
-        print "Invalid input files"
+        print("Invalid input files")
         sys.exit(-1)
 
     speedups = { int(ss): { int(kk) : data[ss]["seq"][0] / vv[0]
@@ -108,7 +109,7 @@ def main(argv):
                 }
 
     max_speedup = max ([ max ([ v for _, v in vv.items() ]) for _, vv in speedups.items() ])
-    print max_speedup
+    print(max_speedup)
 
     k_x = [ int(kk) for kk, _ in speedups[current_S].items() if kk != "seq" ]
     k_x.sort()
@@ -143,7 +144,7 @@ def main(argv):
     nks = len(k_x) - 1
     nsizes = len(sizes_x) - 1
     k1 = k_x[0]
-    k2 = k_x[nks/3]
+    k2 = k_x[int(nks/3)]
     k3 = k_x[nks-1]
     k4 = k_x[nks]
     k_sz1 = [ speedups[sz][k1] for sz in sizes_x ]

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-DIR=$1
-CORES=$2
-
 plotfn() {
   SZ=$1
   NAME=${DIR,,}
@@ -16,5 +13,9 @@ plotfn() {
 
 [ ! -d ./plots ] && mkdir plots
 
-plotfn ${CORES}
+for d in DotProd FFT Mergesort
+do
+  DIR=${d}
+  plotfn ${1}
+done
 
