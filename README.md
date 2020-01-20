@@ -14,7 +14,7 @@ performance of the generated code, and its scalability.
 ## Repository Contents
 
 * **README.md**: This file
-* **LICENSE**: BSD-3 license, anonymised for this submission
+* **LICENSE**: BSD-3 license
 * **src**: Source code of the EDSL + Compiler
 * **app**: Source code of the binary `session-arrc`
 * **examples**: Examples and benchmarks
